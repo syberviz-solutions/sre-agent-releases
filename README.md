@@ -30,11 +30,29 @@ Verify the download (optional): download `SHA256SUMS` from the same release and 
 ## Configure and start
 
 ```bash
-sudo nano /etc/sre-agent/sre-agent.env   # LLM key, Slack webhook, log source, repo
-sudo sre-agent doctor                    # checks the config; fix anything marked FAIL
-sudo systemctl start sre-agent
-sudo systemctl status sre-agent
+sudo sre-agent setup
 ```
+
+The setup asks a few questions, one section at a time, and writes `/etc/sre-agent/sre-agent.env` for you:
+
+| Section | Asks for | Required |
+|---|---|---|
+| AI provider | Claude / OpenAI / Groq / xAI / OpenAI-compatible, and its API key | yes |
+| Alerts | Slack and/or Google Chat webhook, or email (SMTP) | at least one |
+| Logs | a log file on this server, or on another server over SSH (it can create the SSH key and trust the server for you) | yes |
+| Web access | public URL for the Approve/Reject links, listen address, port | defaults offered |
+| Code fixes | repo path, branch, test command, GitHub token | optional |
+| Automation | auto mode, code fixes, pushing, shipping mode | optional (all off at first) |
+
+Press **Enter** to keep the value shown in brackets or skip an optional question, type **-** to clear a value,
+**Ctrl+C** to quit without saving. Secrets are typed hidden and shown masked. At the end it shows a summary,
+saves (keeping a `.bak` copy), runs `sre-agent doctor` and offers to start the service.
+
+Change one part later with e.g. `sudo sre-agent setup --only notifications`
+(sections: `llm`, `notifications`, `logs`, `web`, `code`, `automation`).
+
+Prefer editing by hand? `sudo nano /etc/sre-agent/sre-agent.env`, then `sudo sre-agent doctor` and
+`sudo systemctl restart sre-agent`.
 
 `SRE_API_KEY` and `APPROVAL_SECRET` are generated for you on first install (unique per server).
 Call the API with the header `X-API-Key: <SRE_API_KEY>`.
