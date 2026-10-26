@@ -15,7 +15,7 @@ The package brings its own Python. The server only needs `git` (installed automa
 ## Install
 
 ```bash
-VERSION=1.0.0
+VERSION=2.0.0
 
 # Ubuntu / Debian
 wget https://github.com/syberviz-solutions/sre-agent-releases/releases/download/v$VERSION/sre-agent_$VERSION-1_amd64.deb
